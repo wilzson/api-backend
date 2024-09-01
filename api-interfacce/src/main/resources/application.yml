@@ -1,0 +1,11 @@
+server:
+  port: 8123
+  servlet:
+    context-path: /api # 指定全局接口地址，加一个api前缀
+spring:
+  application:
+    name: api-interfacce
+client:
+  sdk:
+    access-key: fengzefeng
+    secret-key: scnussp
