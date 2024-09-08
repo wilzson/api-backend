@@ -1,7 +1,7 @@
 package com.demo.api.service;
 
-import com.demo.api.model.entity.InterfaceInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.apicommon.model.entity.InterfaceInfo;
 
 /**
 * @author fzefeng
@@ -10,4 +10,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface InterfaceInfoService extends IService<InterfaceInfo> {
 
+    void validInterfaceInfo(InterfaceInfo InterfaceInfo, boolean add);
 }

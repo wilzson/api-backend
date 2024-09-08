@@ -7,9 +7,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="api-gateway" />
+        <module name="api-common" />
+        <module name="api-client-sdk" />
         <module name="api-backend" />
         <module name="api-interfacce" />
-        <module name="api-client-sdk" />
       </profile>
     </annotationProcessing>
   </component>
@@ -17,6 +19,8 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="api-backend" options="-parameters" />
       <module name="api-client-sdk" options="-parameters" />
+      <module name="api-common" options="-parameters" />
+      <module name="api-gateway" options="-parameters" />
       <module name="api-interfacce" options="-parameters" />
     </option>
   </component>

@@ -3,8 +3,10 @@ package com.demo.api.aop;
 import com.demo.api.annotation.AuthCheck;
 import com.demo.api.common.ErrorCode;
 import com.demo.api.exception.BusinessException;
-import com.demo.api.model.entity.User;
+
+
 import com.demo.api.model.enums.UserRoleEnum;
+
 import com.demo.api.service.UserService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -14,19 +16,18 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.example.apicommon.model.entity.User;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 /**
  * 权限校验 AOP
- *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
  */
 @Aspect
 @Component
 public class AuthInterceptor {
-
+    // TODO 了解一下 AOP 的具体应用
     @Resource
     private UserService userService;
 

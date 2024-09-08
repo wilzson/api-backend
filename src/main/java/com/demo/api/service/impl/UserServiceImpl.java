@@ -8,8 +8,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.demo.api.common.ErrorCode;
 import com.demo.api.exception.BusinessException;
 import com.demo.api.mapper.UserMapper;
-import com.demo.api.model.entity.User;
+
 import com.demo.api.service.UserService;
+import com.example.apicommon.model.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -25,8 +26,7 @@ import static com.demo.api.constant.UserConstant.USER_LOGIN_STATE;
 /**
  * 用户服务实现类
  *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
+
  */
 @Service
 @Slf4j
@@ -39,7 +39,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     /**
      * 盐值，混淆密码
      */
-    private static final String SALT = "yupi";
+    private static final String SALT = "fengzefeng";
 
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {

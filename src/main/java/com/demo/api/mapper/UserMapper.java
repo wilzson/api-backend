@@ -1,7 +1,8 @@
 package com.demo.api.mapper;
 
-import com.demo.api.model.entity.User;
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.apicommon.model.entity.User;
 
 /**
 * @author fzefeng
