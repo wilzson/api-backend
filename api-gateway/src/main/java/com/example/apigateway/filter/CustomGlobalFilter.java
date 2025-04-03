@@ -1,6 +1,5 @@
-package com.example.apigateway;
+package com.example.apigateway.filter;
 
-import com.example.apiclientsdk.utils.SignUtils;
 import com.example.apicommon.model.entity.InterfaceInfo;
 import com.example.apicommon.model.entity.User;
 import com.example.apicommon.service.InnerInterfaceInfoService;
@@ -12,7 +11,6 @@ import org.reactivestreams.Publisher;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
-
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.core.io.buffer.DataBufferUtils;
@@ -64,6 +62,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         // 3. 黑白名单
         if (!IP_WHITE_LIST.contains(sourceAddress)) {
             response.setStatusCode(HttpStatus.FORBIDDEN);
+            // 这个
             return response.setComplete(); // 响应式编程 结束调用，返回结果
         }
         // 4. 用户鉴权 (判断ak、sk 是否合法)
@@ -73,59 +72,61 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         String timestamp = headers.getFirst("timestamp");
         String sign = headers.getFirst("sign");
         String body = headers.getFirst("body");
-
+        return chain.filter(exchange);
         // 去数据库中查是否已经分配给用户
-        User invokeUser = null;
-        try {
-            // 调用内部服务，根据访问密钥获取用户信息
-            invokeUser = innerUserService.getInvokeUser(accessKey);
-        } catch (Exception e) {
-            // 捕获异常，记录日志
-            log.error("getInvokeUser error", e);
-        }
+//        User invokeUser = null;
+//        try {
+//            // 调用内部服务，根据访问密钥获取用户信息
+//            invokeUser = innerUserService.getInvokeUser(accessKey);
+//        } catch (Exception e) {
+//            // 捕获异常，记录日志
+//            log.error("getInvokeUser error", e);
+//        }
+//
+//        if (invokeUser == null) {
+//            // 如果用户信息为空，处理未授权情况并返回响应
+//            return handleNoAuth(response);
+//        }
+//        // 校验随机数，模拟一下，直接判断nonce是否大于10000
+//        if (Long.parseLong(nonce) > 10000) {
+//            return handleNoAuth(response);
+//        }
 
-        if (invokeUser == null) {
-            // 如果用户信息为空，处理未授权情况并返回响应
-            return handleNoAuth(response);
-        }
-        // 校验随机数，模拟一下，直接判断nonce是否大于10000
-        if (Long.parseLong(nonce) > 10000) {
-            return handleNoAuth(response);
-        }
 
         // 时间和当前时间不能超过5分钟
-        Long currentTime = System.currentTimeMillis() / 1000;
-        final Long FIVE_MINUTE = 60 * 5L;
-        if ((currentTime - Long.parseLong(timestamp)) >= FIVE_MINUTE) {
-            return handleNoAuth(response);
-        }
-
-        // 根据数据库去查出secretKey
-        String secretKey = invokeUser.getSecretKey();
-        String serverSign = SignUtils.genSign(body, secretKey);
-        // 判断如果生成的签名前后不一致，则抛出异常，并提示"无权限"
-        if(!sign.equals(serverSign)) {
-            return handleNoAuth(response);
-        }
-        // 5. 请求的模拟接口是否存在
-        // 5.1 初始化一个InterfaceInfo对象，用于存储查询结果
-        InterfaceInfo interfaceInfo = null;
-        // TODO 从数据库中查询模拟接口是否存在，以及请求方法是否匹配（还可以校验参数）
-        try {
-            // 尝试从内部接口信息服务获取指定路径和方法的接口信息
-            interfaceInfo = interfaceInfoService.getInterfaceInfo(path, method);
-        } catch (Exception e) {
-            // 如果获取接口信息时出现异常，记录错误日志
-            log.error("getInterfaceInfo error", e);
-        }
-        if (interfaceInfo == null) {
-            // 如果为获取到接口信息，返回处理未授权的响应
-            return handleNoAuth(response);
-        }
-        // 6. 请求转发，调用模拟接口
-//        Mono<Void> filter = chain.filter(exchange);
-        // 7. 响应日志
-        return handleResponse(exchange, chain, interfaceInfo.getId(), invokeUser.getId());
+//        Long currentTime = System.currentTimeMillis() / 1000;
+//        final Long FIVE_MINUTE = 60 * 5L;
+//        if ((currentTime - Long.parseLong(timestamp)) >= FIVE_MINUTE) {
+//            return handleNoAuth(response);
+//        }
+//
+//        // 根据数据库去查出secretKey
+//        String secretKey = invokeUser.getSecretKey();
+////        String serverSign = SignUtils.genSign(body, secretKey);
+//        String serverSign = "";
+//        // 判断如果生成的签名前后不一致，则抛出异常，并提示"无权限"
+//        if(!sign.equals(serverSign)) {
+//            return handleNoAuth(response);
+//        }
+//        // 5. 请求的模拟接口是否存在
+//        // 5.1 初始化一个InterfaceInfo对象，用于存储查询结果
+//        InterfaceInfo interfaceInfo = null;
+//        // TODO 从数据库中查询模拟接口是否存在，以及请求方法是否匹配（还可以校验参数）
+//        try {
+//            // 尝试从内部接口信息服务获取指定路径和方法的接口信息
+//            interfaceInfo = interfaceInfoService.getInterfaceInfo(path, method);
+//        } catch (Exception e) {
+//            // 如果获取接口信息时出现异常，记录错误日志
+//            log.error("getInterfaceInfo error", e);
+//        }
+//        if (interfaceInfo == null) {
+//            // 如果为获取到接口信息，返回处理未授权的响应
+//            return handleNoAuth(response);
+//        }
+//        // 6. 请求转发，调用模拟接口
+////        Mono<Void> filter = chain.filter(exchange);
+//        // 7. 响应日志
+//        return handleResponse(exchange, chain, interfaceInfo.getId(), invokeUser.getId());
 //        log.info("响应" + response.getStatusCode());
 
         // 8. 调用成功，接口调用次数 + 1

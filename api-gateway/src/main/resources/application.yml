@@ -18,6 +18,22 @@ spring:
           uri: http://127.0.0.1:8123
           predicates:
             - Path=/api/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                # 用于限流的键的解析器的 Bean 对象的名字。它使用 SpEL 表达式根据#{@beanName}从 Spring 容器中获取 Bean 对象。
+                key-resolver: '#{@UriKeyResolver}'
+                redis-rate-limiter.replenishRate: 1 # 令牌桶每秒生成的token速度
+                redis-rate-limiter.burstCapacity: 3 # 令牌桶的最大容量
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+
+
+
+
+
 # 以下配置指定了应用的名称、使用的协议（Dubbo）、注册中心的类型（Nacos）和地址
 dubbo:
   application:
